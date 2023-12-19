@@ -1,38 +1,35 @@
-import { useState } from "react"
+import React, { useState } from 'react';
 
-function ColorToggleForm() {
-    const [color1, setColor1] = useState('red')
-    const [color2, setColor2] = useState('blue')
+const TodoList = () => {
+    const [tasks, setTasks] = useState([]);
+    const [newTask, setNewTask] = useState('');
 
-    const toggleColors = () => {
-        setColor1(color2)
-        setColor2(color1)
-    }
+    const handleAddTask = () => {
+        if (newTask.trim() !== '') {
+            setTasks([...tasks, newTask]);
+            setNewTask('');
+        }
+    };
 
     return (
         <div>
-            <div
-                style={{
-                    width: '100px',
-                    height: '100px',
-                    margin: '10px',
-                    backgroundColor: color1,
-                    cursor: 'pointer'
-                }}
-                onClick={toggleColors}
-            ></div>
-            <div
-                style={{
-                    width: '100px',
-                    height: '100px',
-                    margin: '10px',
-                    backgroundColor: color2,
-                    cursor: 'pointer'
-                }}
-                onClick={toggleColors}
-            ></div>
+            <h1>Todo List</h1>
+            <ul>
+                {tasks.map((task, index) => (
+                    <li key={index}>{task}</li>
+                ))}
+            </ul>
+            <div>
+                <input
+                    type="text"
+                    value={newTask}
+                    onChange={(event) => setNewTask(event.target.value)}
+                    placeholder="Вводи что-то:"
+                />
+                <button onClick={handleAddTask}>Добавить !</button>
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default ColorToggleForm
+export default TodoList;
