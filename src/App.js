@@ -1,75 +1,67 @@
 import React, { useState } from 'react';
+import AddTodo from './components/AddTodo';
+import TaskList from './components/TaskList';
+import tasksArray from './components/Massiv';
+import './index.css';
 
-const AuthForm = () => {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        age: '',
-        email: '',
-        phoneNumber: ''
-    });
+const App = () => {
+    const [tasks, setTasks] = useState(tasksArray);
+    const [searchId, setSearchId] = useState('');
+    const [searchResult, setSearchResult] = useState(null);
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
-        }));
+    const handleAdd = (text) => {
+        const newTask = { id: tasks.length + 1, text };
+        setTasks([...tasks, newTask]);
+    };
+
+    const handleDelete = (id) => {
+        const updatedTasks = tasks.filter((task) => task.id !== id);
+        setTasks(updatedTasks);
+    };
+
+    const handleEdit = (id, newText) => {
+        const updatedTasks = tasks.map((task) =>
+            task.id === id ? { ...task, text: newText } : task
+        );
+        setTasks(updatedTasks);
+    };
+
+    const findTaskById = (idToSearch) => {
+        const task = tasks.find((task) => task.id === idToSearch);
+        return task ? task : null;
+    };
+
+    const handleSearch = () => {
+        const result = findTaskById(parseInt(searchId, 10));
+        setSearchResult(result || 'Task Not Found');
     };
 
     return (
         <div>
-            <h2>Регистрация/Авторизация</h2>
-            <form>
-                <label>
-                    ФИО:
-                    <input
-                        type="text"
-                        name="fullName"
-                        value={formData.fullName}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Возраст:
-                    <input
-                        type="number"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Электронная почта:
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Номер телефона:
-                    <input
-                        type="tel"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                    />
-                </label>
-            </form>
-
-            <div>
-                <h3>Данные пользователя в реальном времени:</h3>
-                <p>ФИО: {formData.fullName}</p>
-                <p>Возраст: {formData.age}</p>
-                <p>Электронная почта: {formData.email}</p>
-                <p>Номер телефона: {formData.phoneNumber}</p>
-            </div>
+            <AddTodo onAdd={handleAdd} />
+            <input
+                type="text"
+                placeholder="Enter Task ID"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+            />
+            <button onClick={handleSearch}>Search</button>
+            <TaskList
+                tasks={tasks}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                onSearch={findTaskById}
+            />
+            {searchResult && typeof searchResult === 'object' && (
+                <p>
+                    Found Task: ID {searchResult.id}, Text: {searchResult.text}
+                </p>
+            )}
+            {searchResult && typeof searchResult === 'string' && (
+                <p>{searchResult}</p>
+            )}
         </div>
     );
 };
 
-export default AuthForm;
+export default App;
