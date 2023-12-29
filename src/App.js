@@ -1,67 +1,25 @@
-import React, { useState } from 'react';
-import AddTodo from './components/AddTodo';
-import TaskList from './components/TaskList';
-import tasksArray from './components/Massiv';
-import './index.css';
+import React, { useEffect, useState } from 'react';
 
-const App = () => {
-    const [tasks, setTasks] = useState(tasksArray);
-    const [searchId, setSearchId] = useState('');
-    const [searchResult, setSearchResult] = useState(null);
+function EffectExample() {
+    const [count, setCount] = useState(0);
 
-    const handleAdd = (text) => {
-        const newTask = { id: tasks.length + 1, text };
-        setTasks([...tasks, newTask]);
-    };
+    useEffect(() => {
+        document.title = `Счетчик: ${count}`;
+    });
 
-    const handleDelete = (id) => {
-        const updatedTasks = tasks.filter((task) => task.id !== id);
-        setTasks(updatedTasks);
-    };
-
-    const handleEdit = (id, newText) => {
-        const updatedTasks = tasks.map((task) =>
-            task.id === id ? { ...task, text: newText } : task
-        );
-        setTasks(updatedTasks);
-    };
-
-    const findTaskById = (idToSearch) => {
-        const task = tasks.find((task) => task.id === idToSearch);
-        return task ? task : null;
-    };
-
-    const handleSearch = () => {
-        const result = findTaskById(parseInt(searchId, 10));
-        setSearchResult(result || 'Task Not Found');
+    const handleReset = () => {
+        setCount(0);
     };
 
     return (
         <div>
-            <AddTodo onAdd={handleAdd} />
-            <input
-                type="text"
-                placeholder="Enter Task ID"
-                value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-            />
-            <button onClick={handleSearch}>Search</button>
-            <TaskList
-                tasks={tasks}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-                onSearch={findTaskById}
-            />
-            {searchResult && typeof searchResult === 'object' && (
-                <p>
-                    Found Task: ID {searchResult.id}, Text: {searchResult.text}
-                </p>
-            )}
-            {searchResult && typeof searchResult === 'string' && (
-                <p>{searchResult}</p>
-            )}
+            <p>Count: {count}</p>
+            <button onClick={() => setCount((prevCount) => prevCount + 1)}>
+                Увеличить на 1
+            </button>
+            <button onClick={handleReset}>Сбросить</button>
         </div>
     );
-};
+}
 
-export default App;
+export default EffectExample;

@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import TaskApp from "./App";
+import RefExample from "./App2";
+import EffectExample from "./App";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <TaskApp/>
+    <RefExample/>
+    <EffectExample/>
   </React.StrictMode>
 );
 
